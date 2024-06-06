@@ -1,26 +1,34 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'child_process'
-const packages = JSON.parse(fs.readFileSync('src/data.json'))
 import fs from 'fs'
+export const packages = JSON.parse(fs.readFileSync('src/data.json'))
+
+export function mapPackages() {
+    let result = []
+    Object.entries(packages).forEach(pkg => {
+        result.push({ value: pkg[0]})
+    });
+    return result
+}
 
 function install() {
     return spawnSync('sh', ['./scripts/install.sh'], { stdio: 'inherit' })
 }
 
-function installPkg(pkg) {
+function installPkg(task) {
 
-    const [arg, ...args] = packages[pkg].split(' ');
+    const [key, ...commd] = packages[task].split(' ');
 
-    return spawnSync(`${arg}`, [...args], {
+    return spawnSync(`${key}`, [...commd], {
         stdio: 'inherit',
         encoding: 'utf-8'
     })
 }
 
 async function Tasks(tasks) {
-
-    for (const task of tasks) {
+    console.log(tasks)
+    for await (const task of tasks) {
         await installPkg(task);
     }
 }

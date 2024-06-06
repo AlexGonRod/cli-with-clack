@@ -1,10 +1,14 @@
 {
-    "Homebrew": "curl -fsSL -o install.sh https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh'",
-    "node": "brew install node",
-    "git": "brew install git",
-    "iterm2": "brew install node",
-    "vscode": "brew install --cask visual-studio-code",
-    "warp": "brew install --cask warp",
-    "brave": "brew install --cask brave-browser",
-    "ZSH": "brew install zsh && chsh -s /bin/zsh"
+    "IDE": [
+        {"VScode": "brew install --cask visual-studio-code"},
+        {"Iterm2": "brew install node"}
+    ],
+    "Terminal": [
+        {"Warp": "brew install --cask warp"},
+        {"ZSH": "brew install zsh && chsh -s /bin/zsh"}
+    ],
+    "tools": [
+        {"Brave": "brew install --cask brave-browser"},
+        {"GIT": "brew install git"}
+    ]
 }
