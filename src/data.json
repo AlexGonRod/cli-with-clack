@@ -1,14 +1,14 @@
 {
     "IDE": [
-        {"VScode": "brew install --cask visual-studio-code"},
-        {"Iterm2": "brew install node"}
+        {"name":"VScode", "code":  "brew install --cask visual-studio-code"},
+        {"name": "Iterm2", "code" : "brew install node"}
     ],
     "Terminal": [
-        {"Warp": "brew install --cask warp"},
-        {"ZSH": "brew install zsh && chsh -s /bin/zsh"}
+        {"name": "Warp", "code": "brew install --cask warp"},
+        {"name": "ZSH", "code": "brew install zsh && chsh -s /bin/zsh"}
     ],
     "tools": [
-        {"Brave": "brew install --cask brave-browser"},
-        {"GIT": "brew install git"}
+        {"name": "Brave", "code": "brew install --cask brave-browser"},
+        {"name": "GIT", "code": "brew install git"}
     ]
 }

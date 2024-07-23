@@ -16,35 +16,46 @@ async function main() {
 
     if (first) return install()
 
-    function isArray(arr) {
-        if (Array.isArray(arr)) {
-            for (const item of arr) {
-                for (const [key, value] of Object.entries(item)) {
-                    console.log(`${key}: ${value}`);
-                }
-            }
 
-        }
+    function getPksg(key) {
 
-    }
-
-    function getPksg() {
-
-        const keys = {};
-        for (const key in pkgs) {
-            keys[key] = pkgs[key].map(innerObj => Object.keys(innerObj)[0]);
-            return p.select({
-                message: `Select ${key}`,
-                value: keys[key]
-            })
-        }
+        return pkgs[key].map(innerObj => Object.keys(innerObj)[0]);
+        // for (const key in pkgs) {
+        // keys[key] = pkgs[key].map(innerObj => Object.keys(innerObj)[0]);
+        // return p.select({
+        //     message: `Select ${key}`,
+        //     value: keys[key]
+        // })
+        // }
 
 
     }
 
     const project = await p.group({
-        value: () => getPksg(),
-
+        ide: () =>
+            p.select({
+                message: 'What IDE do you want to use?',
+                options: [
+                    { value: 'VScode', label: 'VScode' },
+                    { value: 'Iterm2', label: 'Iterm' },
+                ]
+            }),
+        terminal: () =>
+            p.select({
+                message: 'What terminal do you want to use?',
+                options: [
+                    { value: 'Warp', label: 'warp' },
+                    { value: 'ZSH', label: 'zsh' },
+                ]
+            }),
+        // tools: () =>
+        //     p.multiselect({
+        //         message: 'Do you want some more tools?',
+        //         options:[
+        //             { value: 'Brave', label: 'brave'},
+        //             { value: 'GIT', label: 'git'},
+        //         ]
+        //     }),
         install: () =>
             p.confirm({
                 message: "Do you want to install packages",
@@ -59,7 +70,9 @@ async function main() {
 
     if (project.install) {
         const s = p.spinner()
-        // await Tasks(project.package.concat(project.ide, project.terminal))
+        const packages = []
+        packages.push({ "IDE": project.ide }, { "Terminal": project.terminal })
+        await Tasks(packages)
         s.stop('Packages installed')
     }
     p.outro(`Any issues?, ${color.white(color.green('https://github.com/AlexGonRod'))}`)

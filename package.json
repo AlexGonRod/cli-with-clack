@@ -10,6 +10,10 @@
   "author": "@alexgonrod83",
   "license": "ISC",
   "dependencies": {
-    "@clack/prompts": "^0.7.0"
+    "@clack/prompts": "^0.7.0",
+    "eslint": "^9.7.0"
+  },
+  "devDependencies": {
+    "prettier": "3.3.3"
   }
 }
