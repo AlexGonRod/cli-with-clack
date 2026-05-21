@@ -1,14 +1,26 @@
 {
-    "IDE": [
-        {"name":"VScode", "code":  "brew install --cask visual-studio-code"},
-        {"name": "Iterm2", "code" : "brew install node"}
-    ],
-    "Terminal": [
-        {"name": "Warp", "code": "brew install --cask warp"},
-        {"name": "ZSH", "code": "brew install zsh && chsh -s /bin/zsh"}
-    ],
-    "tools": [
-        {"name": "Brave", "code": "brew install --cask brave-browser"},
-        {"name": "GIT", "code": "brew install git"}
-    ]
+    "IDE": {
+        "type": "single",
+        "message": "What IDE do you want to use?",
+        "options": [
+            {"name":"VScode", "code":  "brew install --cask visual-studio-code"},
+            {"name": "Iterm2", "code" : "brew install --cask iterm2"}
+        ]
+    },
+    "Terminal": {
+        "type": "single",
+        "message": "What terminal do you want to use?",
+        "options": [
+            {"name": "Warp", "code": "brew install --cask warp"},
+            {"name": "ZSH", "code": "brew install zsh && chsh -s /bin/zsh"}
+        ]
+    },
+    "tools": {
+        "type": "multi",
+        "message": "Do you want some more tools?",
+        "options": [
+            {"name": "Brave", "code": "brew install --cask brave-browser"},
+            {"name": "GIT", "code": "brew install git"}
+        ]
+    }
 }

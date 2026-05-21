@@ -2,8 +2,11 @@
 
 import * as p from '@clack/prompts'
 import color from 'picocolors';
+import { readFileSync } from 'fs'
 
-import { install, Tasks, packages as pkgs } from './shared/index.js'
+import { install, Tasks } from './shared/index.js'
+
+const categories = JSON.parse(readFileSync('src/data.json', 'utf-8'))
 
 async function main() {
     console.clear();
@@ -16,54 +19,26 @@ async function main() {
 
     if (first) return install()
 
+    const group = {}
 
-    function getPksg(key) {
+    for (const [key, cat] of Object.entries(categories)) {
+        const options = cat.options.map(o => ({ value: o.name, label: o.name }))
 
-        return pkgs[key].map(innerObj => Object.keys(innerObj)[0]);
-        // for (const key in pkgs) {
-        // keys[key] = pkgs[key].map(innerObj => Object.keys(innerObj)[0]);
-        // return p.select({
-        //     message: `Select ${key}`,
-        //     value: keys[key]
-        // })
-        // }
-
-
+        if (cat.type === 'single') {
+            group[key] = () => p.select({ message: cat.message, options })
+        } else {
+            group[key] = () => p.multiselect({ message: cat.message, options })
+        }
     }
 
-    const project = await p.group({
-        ide: () =>
-            p.select({
-                message: 'What IDE do you want to use?',
-                options: [
-                    { value: 'VScode', label: 'VScode' },
-                    { value: 'Iterm2', label: 'Iterm' },
-                ]
-            }),
-        terminal: () =>
-            p.select({
-                message: 'What terminal do you want to use?',
-                options: [
-                    { value: 'Warp', label: 'warp' },
-                    { value: 'ZSH', label: 'zsh' },
-                ]
-            }),
-        // tools: () =>
-        //     p.multiselect({
-        //         message: 'Do you want some more tools?',
-        //         options:[
-        //             { value: 'Brave', label: 'brave'},
-        //             { value: 'GIT', label: 'git'},
-        //         ]
-        //     }),
-        install: () =>
-            p.confirm({
-                message: "Do you want to install packages",
-                initialValue: false
-            })
-    }, {
+    group.install = () => p.confirm({
+        message: "Do you want to install packages",
+        initialValue: false
+    })
+
+    const project = await p.group(group, {
         onCancel: () => {
-            p.cancel('Operaton cancelled');
+            p.cancel('Operation cancelled');
             process.exit(0)
         }
     })
@@ -71,7 +46,18 @@ async function main() {
     if (project.install) {
         const s = p.spinner()
         const packages = []
-        packages.push({ "IDE": project.ide }, { "Terminal": project.terminal })
+
+        for (const [key, cat] of Object.entries(categories)) {
+            const value = project[key]
+            if (!value) continue
+
+            if (cat.type === 'single') {
+                packages.push({ [key]: value })
+            } else if (Array.isArray(value)) {
+                value.forEach(v => packages.push({ [key]: v }))
+            }
+        }
+
         await Tasks(packages)
         s.stop('Packages installed')
     }
